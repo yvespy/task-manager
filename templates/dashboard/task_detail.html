@@ -1,0 +1,78 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+  <div class="container mt-4">
+    <div class="card shadow-sm">
+      <div class="card-header bg-primary text-white">
+        <h3 class="mb-0">{{ task.name }}</h3>
+      </div>
+      <div class="card-body">
+        <p class="fw-bold">Description:</p>
+        <p>{{ task.description|default:"No description provided" }}</p>
+
+        <p class="fw-bold">Priority:</p>
+        <span class="badge
+                {% if task.priority == 'Urgent' %} bg-danger
+                {% elif task.priority == 'High' %} bg-info
+                {% elif task.priority == 'Medium' %} bg-warning
+                {% else %} bg-secondary {% endif %}">
+                {{ task.priority }}
+            </span>
+
+        <p class="fw-bold mt-3">Deadline:</p>
+        <p>{{ task.deadline|date:"d M Y, H:i" }}</p>
+
+        <p class="fw-bold">Task Type:</p>
+        <p>{{ task.task_type.name }}</p>
+
+        <p class="fw-bold">Assigned to:</p>
+        <ul>
+          {% for worker in task.assignees.all %}
+            <li>{{ worker.username }}</li>
+          {% empty %}
+            <li>No assignees</li>
+          {% endfor %}
+        </ul>
+
+        <p class="fw-bold">Status:</p>
+        <span class="badge {% if task.is_completed %} bg-success {% else %} badge bg-danger {% endif %}">
+                {% if task.is_completed %} Completed {% else %} Not Completed {% endif %}
+            </span>
+
+        <div class="mt-4">
+          <a href="{% url 'task-list' %}" class="btn btn-outline-secondary">Back to Tasks</a>
+          <a href="{% url 'task-update' task.pk %}" class="btn btn-warning">Edit Task</a>
+
+          {% if not task.is_completed %}
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmComplete">
+              Mark as Completed
+            </button>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="confirmComplete" tabindex="-1" aria-labelledby="confirmCompleteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmCompleteLabel">Confirm Completion</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to mark "<b>{{ task.name }}</b>" as completed?
+        </div>
+        <div class="modal-footer">
+          <form method="post" action="{% url 'task-complete' task.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success">Yes</button>
+          </form>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

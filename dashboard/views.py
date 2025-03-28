@@ -1,10 +1,12 @@
+from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render, redirect
-from django.views import generic
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse_lazy
+from django.views import generic, View
 
-from dashboard.forms import SignUpForm
-from dashboard.models import Worker, Task
+from dashboard.forms import SignUpForm, TaskForm
+from dashboard.models import Worker, Task, TaskType
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -35,12 +37,91 @@ class WorkerDetailView(LoginRequiredMixin, generic.DetailView):
 
 class TaskListView(LoginRequiredMixin, generic.ListView):
     model = Task
+    template_name = "pages/dashboard/dashboard.html"
     context_object_name = "tasks_list"
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_superuser:
+            return Task.objects.all()
+        return Task.objects.filter(assignees=user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        workers = get_user_model()
+        context["workers"] = workers.objects.filter(is_superuser=False)
+
+        if user.is_superuser:
+            context["tasks_list"] = Task.objects.filter(is_completed=False)
+            context["completed_tasks"] = Task.objects.filter(is_completed=True)
+        else:
+            context["tasks_list"] = Task.objects.filter(assignees=user,
+                                                        is_completed=False)
+            context["completed_tasks"] = Task.objects.filter(assignees=user,
+                                                             is_completed=True)
+
+        return context
 
 
 class TaskDetailView(LoginRequiredMixin, generic.DetailView):
     model = Task
-    context_object_name = "task_detail"
+    template_name = "dashboard/task_detail.html"
+    context_object_name = "task"
+
+
+class TaskCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Task
+    form_class = TaskForm
+    template_name = "dashboard/create_task.html"
+    success_url = reverse_lazy("task-list")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["users"] = Worker.objects.all()
+        return context
+
+    def form_valid(self, form):
+        task = form.save(commit=False)
+        task.save()
+        task.assignees.add(self.request.user)
+        return super().form_valid(form)
+
+
+class TaskCompleteView(LoginRequiredMixin, View):
+    def post(self, request, pk):
+        task = get_object_or_404(Task, pk=pk)
+        task.is_completed = True
+        task.save()
+        return redirect("task-list")
+
+    def get_success_url(self):
+        return reverse_lazy("task-list")
+
+
+class TaskUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = Task
+    fields = ["name", "description", "deadline", "priority", "task_type"]
+    template_name = "dashboard/task_update.html"
+    success_url = reverse_lazy("task-list")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["task_types"] = TaskType.objects.all()
+        if self.request.user.is_superuser:
+            context["assignees"] = Worker.objects.all()
+        else:
+            context["assignees"] = self.object.assignees.all()
+        return context
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        if 'assignees' in self.request.POST:
+            assignees_ids = self.request.POST.getlist('assignees')
+            self.object.assignees.set(assignees_ids)
+
+        return response
 
 
 def sign_up_view(request):

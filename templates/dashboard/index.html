@@ -11,7 +11,7 @@
 
 =========================================================
 
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. Please contact us to request a removal. Contact us if you want to remove it.
+  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. Please contact us to request a removal. Contact us if you want to remove it.
 
 -->
 <!DOCTYPE html>
@@ -39,7 +39,7 @@
         </div>
         <ul class="navbar-nav navbar-nav-hover align-items-lg-center">
           <li class="nav-item me-2">
-            <a href="#" class="nav-link">Dashboard</a>
+            <a href="{% url 'task-list' %}" class="nav-link">Dashboard</a>
           </li>
         </ul>
       </div>
@@ -100,7 +100,7 @@
           <h2 class="lead fw-normal text-muted mb-5">A miniature version of how to manage work tasks</h2>
           <!-- Button Modal -->
           <div class="d-flex align-items-center justify-content-center mb-5">
-            <a href="#"
+            <a href="{% url 'task-list' %}"
                class="btn btn-secondary d-inline-flex align-items-center me-4">
               <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20"
                    xmlns="http://www.w3.org/2000/svg">
@@ -161,4 +161,3 @@
           <h3 class="fw-bolder">{{ num_completed }}</h3>
           <p class="text-gray">This many tasks have already been completed by employees</p>
         </div>
-{% include 'includes/scripts.html' %}

@@ -1,6 +1,6 @@
 from django import forms
 
-from dashboard.models import Worker, Position
+from dashboard.models import Worker, Position, Task
 
 
 class SignUpForm(forms.ModelForm):
@@ -19,3 +19,23 @@ class SignUpForm(forms.ModelForm):
             worker.set_password(self.cleaned_data["password"])
             worker.save()
         return worker
+
+
+class TaskForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ["name", "description", "deadline", "priority", "task_type",]
+        widgets = {
+            "deadline": forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["name"].widget.attrs.update({
+            "class": "form-control",
+            "placeholder": "Enter task name"
+        })
+        self.fields["description"].widget.attrs.update({"class": "form-control", "placeholder": "Describe your task"})
+        self.fields["deadline"].widget.attrs.update({"class": "form-control", "type": "datetime-local"})
+        self.fields["priority"].widget.attrs.update({"class": "form-select"})
+        self.fields["task_type"].widget.attrs.update({"class": "form-control"})

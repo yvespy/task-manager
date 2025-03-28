@@ -1,3 +1,12 @@
+{% extends "layouts/base.html" %}
+{% block header %}
+  <h6>
+    <a href="{% url 'task-list' %}" class="text-gray-700">Back to task dashboard</a>
+  </h6>
+{% endblock %}
+{% block content %}
+
+
 <h1>
   Username: {{ worker_detail.username }}
 </h1>
@@ -20,3 +29,4 @@
     <p>No tasks!</p>
   {% endfor %}
 </div>
+{% endblock %}
