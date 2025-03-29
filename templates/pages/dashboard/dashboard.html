@@ -1,6 +1,4 @@
 {% extends 'layouts/base.html' %}
-{% load static %}
-
 {% block content %}
 
   <div class="py-4">
@@ -13,95 +11,28 @@
         <div class="col-12 mb-4">
           <div class="card border-0 shadow">
             <div class="card-header">
-              <div class="row align-items-center">
-                <div class="col">
-                  <h2 class="fs-5 fw-bold mb-0">Your Tasks</h2>
-                </div>
-                <div class="col text-end">
-                  <a href="#" class="btn btn-sm btn-primary">See all</a>
-                </div>
-              </div>
+              <h2 class="fs-5 fw-bold mb-0">Your Tasks</h2>
             </div>
             <div class="table-responsive">
               <table class="table align-items-center table-flush">
                 <thead class="thead-light">
                 <tr>
-                  <th class="border-bottom" scope="col">Task name</th>
-                  <th class="border-bottom" scope="col">Description</th>
-                  <th class="border-bottom" scope="col">Priority</th>
-                  <th class="border-bottom" scope="col">Task Type</th>
-                  <th class="border-bottom" scope="col">Task status</th>
+                  <th scope="col">Task name</th>
+                  <th scope="col">Description</th>
+                  <th scope="col">Priority</th>
+                  <th scope="col">Task Type</th>
+                  <th scope="col">Task status</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% if tasks_list %}
-                  {% for task in tasks_list %}
-                    <tr>
-                      <th class="text-gray-900" scope="row">
-                        <a href="{% url 'task' task.pk %}" class="text-decoration-none">
-                          {{ task.name }}
-                      </th>
-                      <td class="fw-bolder text-gray-500">
-                        {{ task.description }}
-                      </td>
-                      <td class="fw-bolder text-gray-500">
-                        {% if task.priority == 'Urgent' %}
-                          <span class="badge bg-danger">Urgent</span>
-                        {% elif task.priority == 'High' %}
-                          <span class="badge bg-info">High</span>
-                        {% elif task.priority == 'Medium' %}
-                          <span class="badge bg-warning text-dark">Medium</span>
-                        {% elif task.priority == 'Low' %}
-                          <span class="badge bg-success">Low</span>
-                        {% else %}
-                          {{ task.priority }}
-                        {% endif %}
-                      </td>
-                      <td class="fw-bolder text-gray-500">
-                        {{ task.task_type }}
-                      </td>
-                      <td class="fw-bolder text-gray-500">
-                        {% if task.is_completed %}
-                        {% else %}
-                          <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal"
-                                  data-bs-target="#confirmComplete{{ task.id }}">
-                            Finish task
-                          </button>
-                          <div class="modal fade" id="confirmComplete{{ task.id }}" tabindex="-1"
-                               aria-labelledby="modalTitle{{ task.id }}" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                  <h5 class="modal-title" id="modalTitle{{ task.id }}">Confirmation</h5>
-                                  <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                          aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                  You definitely want to complete the task '<b>{{ task.name }}'</b>?
-                                </div>
-                                <div class="modal-footer">
-                                  <form method="post" action="{% url 'task-complete' task.id %}">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-success">Yes</button>
-                                  </form>
-                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        {% endif %}
-                      </td>
-                    </tr>
-                  {% endfor %}
-                {% else %}
-                  <tr>
-                    <td colspan="5" class="text-center text-gray-500">No active tasks</td>
-                  </tr>
-                {% endif %}
+                {% include 'includes/active_task.html' %}
+                </tbody>
               </table>
             </div>
+            {% include 'includes/pagination.html' with page_obj=tasks_list %}
           </div>
         </div>
+
         <div class="col-12 col-xxl-6 mb-4">
           <div class="card border-0 shadow">
             <div class="card-header border-bottom d-flex align-items-center justify-content-between">
@@ -112,69 +43,31 @@
               <ul class="list-group list-group-flush list my--3">
                 {% for worker in workers %}
                   <li class="list-group-item px-0">
-                    <div class="row align-items-center">
-                      <div class="col-auto ms--2">
-                        <h4 class="h6 mb-0">
-                          <a href="#">{{ worker.first_name }} {{ worker.last_name }}</a>
-                        </h4>
-                        <div class="d-flex align-items-center">
-                          <div class="bg-success dot rounded-circle me-1"></div>
-                          <small>{{ worker.position }}</small>
-                        </div>
-                      </div>
-                      <div class="col text-end">
-                      </div>
+                    <h4 class="h6 mb-0">
+                      <a href="#">{{ worker.first_name }} {{ worker.last_name }}</a>
+                    </h4>
+                    <div class="d-flex align-items-center">
+                      <small>{{ worker.position }}</small>
                     </div>
                   </li>
                 {% endfor %}
-                <li class="list-group-item px-0">
-                  <div class="row align-items-center">
-                    <div class="col-auto">
-                    </div>
-                  </div>
               </ul>
             </div>
           </div>
         </div>
+
         <div class="col-12 col-xxl-6 mb-4">
           <div class="card border-0 shadow">
-            <div class="card-header border-bottom d-flex align-items-center justify-content-between">
+            <div class="card-header">
               <h2 class="fs-5 fw-bold mb-0">Completed Tasks</h2>
-              <div class="col text-end">
-                <a href={% url 'task-list' %} class="btn btn-sm btn-primary">See all</a>
-              </div>
             </div>
             <div class="card-body">
-              {% if completed_tasks %}
-                {% for task in completed_tasks %}
-                  <div class="row mb-4">
-                    <div class="col-auto">
-                      <svg class="icon icon-sm text-gray-500" fill="currentColor" viewBox="0 0 20 20"
-                           xmlns="http://www.w3.org/2000/svg">
-                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"></path>
-                        <path fill-rule="evenodd"
-                              d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z"
-                              clip-rule="evenodd"></path>
-                      </svg>
-                    </div>
-                    <div class="col">
-                      <div class="progress-wrapper">
-                        <div class="progress-info">
-                          <div class="h6 mb-0">{{ task.name }}</div>
-                          <div class="small fw-bold text-gray-500"><span>Completed</span></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                {% endfor %}
-              {% else %}
-                <div class="text-center text-gray-500 py-5">
-                  <p class="mb-0">You didn't finish any task yet</p>
-                </div>
-              {% endif %}
+              {% include 'includes/completed_task.html' %}
             </div>
+            {% include 'includes/pagination.html' with page_obj=completed_tasks %}
           </div>
         </div>
+
       </div>
     </div>
   </div>

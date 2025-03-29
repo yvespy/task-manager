@@ -40,7 +40,7 @@
             </span>
 
         <div class="mt-4">
-          <a href="{% url 'task-list' %}" class="btn btn-outline-secondary">Back to Tasks</a>
+          <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Back to Tasks</a>
           <a href="{% url 'task-update' task.pk %}" class="btn btn-warning">Edit Task</a>
 
           {% if not task.is_completed %}
@@ -74,5 +74,4 @@
       </div>
     </div>
   </div>
-
 {% endblock %}

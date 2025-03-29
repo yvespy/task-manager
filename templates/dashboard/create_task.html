@@ -12,7 +12,7 @@
             </svg>
           </a>
         </li>
-        <li class="breadcrumb-item"><a href={% url 'task-list' %}>Dashboard</a></li>
+        <li class="breadcrumb-item"><a href={% url 'dashboard' %}>Dashboard</a></li>
         <li class="breadcrumb-item active" aria-current="page">Add new task</li>
       </ol>
     </nav>
@@ -20,7 +20,7 @@
 {% endblock %}
 
 <h6>
-  <a href="{% url 'task-list' %}" class="text-gray-700">Back to task dashboard</a>
+  <a href="{% url 'dashboard' %}" class="text-gray-700">Back to task dashboard</a>
 </h6>
 {% block content %}
   <div class="py-4">

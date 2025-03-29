@@ -1,9 +1,10 @@
-from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic, View
+from django.views.generic import TemplateView
 
 from dashboard.forms import SignUpForm, TaskForm
 from dashboard.models import Worker, Task, TaskType
@@ -22,6 +23,57 @@ def index(request: HttpRequest) -> HttpResponse:
 
     return render(request, "dashboard/index.html", context=context)
 
+class ActiveTaskView(LoginRequiredMixin, generic.ListView):
+    model = Task
+    template_name = "includes/active_task.html"
+    context_object_name = "tasks_list"
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_superuser:
+            return Task.objects.filter(is_completed=False)
+        return Task.objects.filter(assignees=user, is_completed=False)
+
+
+class CompletedTaskView(LoginRequiredMixin, generic.ListView):
+    model = Task
+    template_name = "includes/completed_task.html"
+    context_object_name = "completed_tasks"
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_superuser:
+            return Task.objects.filter(is_completed=True)
+        return Task.objects.filter(assignees=user, is_completed=True)
+
+
+class DashboardView(LoginRequiredMixin, TemplateView):
+    template_name = "pages/dashboard/dashboard.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+
+        context["workers"] = Worker.objects.filter(is_superuser=False)
+
+        if user.is_superuser:
+            tasks_list = Task.objects.filter(is_completed=False)
+            completed_tasks = Task.objects.filter(is_completed=True)
+        else:
+            tasks_list = Task.objects.filter(assignees=user, is_completed=False)
+            completed_tasks = Task.objects.filter(assignees=user, is_completed=True)
+
+        task_paginator = Paginator(tasks_list, 5)
+        completed_task_paginator = Paginator(completed_tasks, 5)
+
+        page_number = self.request.GET.get('page')
+        tasks_page = task_paginator.get_page(page_number)
+        completed_tasks_page = completed_task_paginator.get_page(page_number)
+
+        context["tasks_list"] = tasks_page
+        context["completed_tasks"] = completed_tasks_page
+
+        return context
 
 class WorkerListView(LoginRequiredMixin, generic.ListView):
     model = Worker
@@ -37,31 +89,8 @@ class WorkerDetailView(LoginRequiredMixin, generic.DetailView):
 
 class TaskListView(LoginRequiredMixin, generic.ListView):
     model = Task
-    template_name = "pages/dashboard/dashboard.html"
     context_object_name = "tasks_list"
-
-    def get_queryset(self):
-        user = self.request.user
-        if user.is_superuser:
-            return Task.objects.all()
-        return Task.objects.filter(assignees=user)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        user = self.request.user
-        workers = get_user_model()
-        context["workers"] = workers.objects.filter(is_superuser=False)
-
-        if user.is_superuser:
-            context["tasks_list"] = Task.objects.filter(is_completed=False)
-            context["completed_tasks"] = Task.objects.filter(is_completed=True)
-        else:
-            context["tasks_list"] = Task.objects.filter(assignees=user,
-                                                        is_completed=False)
-            context["completed_tasks"] = Task.objects.filter(assignees=user,
-                                                             is_completed=True)
-
-        return context
+    paginate_by = 5
 
 
 class TaskDetailView(LoginRequiredMixin, generic.DetailView):
@@ -74,7 +103,7 @@ class TaskCreateView(LoginRequiredMixin, generic.CreateView):
     model = Task
     form_class = TaskForm
     template_name = "dashboard/create_task.html"
-    success_url = reverse_lazy("task-list")
+    success_url = reverse_lazy("dashboard")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -93,17 +122,17 @@ class TaskCompleteView(LoginRequiredMixin, View):
         task = get_object_or_404(Task, pk=pk)
         task.is_completed = True
         task.save()
-        return redirect("task-list")
+        return redirect("dashboard")
 
     def get_success_url(self):
-        return reverse_lazy("task-list")
+        return reverse_lazy("dashboard")
 
 
 class TaskUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Task
     fields = ["name", "description", "deadline", "priority", "task_type"]
     template_name = "dashboard/task_update.html"
-    success_url = reverse_lazy("task-list")
+    success_url = reverse_lazy("dashboard")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
