@@ -44,8 +44,11 @@
 
         <div class="mt-4">
           <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Back to Tasks</a>
-          <a href="{% url 'task-update' task.pk %}" class="btn btn-warning">Edit Task</a>
-
+          {% if not task.is_completed %}
+            <a href="{% url 'task-update' task.pk %}" class="btn btn-warning">Edit Task</a>
+          {% else %}
+            <button class="btn btn-warning" disabled>Edit Task</button>
+          {% endif %}
           {% if not task.is_completed %}
             <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmComplete">
               Mark as Completed
@@ -55,7 +58,6 @@
       </div>
     </div>
   </div>
-
   <!-- Modal for complete -->
   <div class="modal fade" id="confirmComplete" tabindex="-1" aria-labelledby="confirmCompleteLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
