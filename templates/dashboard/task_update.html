@@ -49,6 +49,23 @@
           </select>
         </div>
 
+        <div class="mb-3">
+          <label for="assignees" class="form-label">Assignees</label>
+          <div class="form-check">
+            {% for worker in assignees %}
+              <div class="form-check">
+                <input class="form-check-input rounded-circle" type="checkbox" name="assignees" value="{{ worker.id }}"
+                       id="assignee-{{ worker.id }}"
+                       {% if worker in form.instance.assignees.all %}checked{% endif %}>
+                <label class="form-check-label" for="assignee-{{ worker.id }}">
+                  {{ worker.username }}
+                </label>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+
         <div class="d-flex justify-content-center gap-3">
           <button type="submit" class="btn btn-success">Save Changes</button>
           <a href="{% url 'task' task.pk %}" class="btn btn-secondary">Cancel</a>

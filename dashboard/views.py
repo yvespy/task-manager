@@ -150,7 +150,7 @@ class TaskDeleteView(LoginRequiredMixin, generic.DeleteView):
     def get_object(self, queryset=None):
         task = get_object_or_404(Task, pk=self.kwargs["pk"])
         if self.request.user not in task.assignees.all() and not self.request.user.is_superuser:
-            raise PermissionDenied
+            raise PermissionDenied("You do not have permission to delete this task.")
         return task
 
 
@@ -163,6 +163,7 @@ class TaskUpdateView(LoginRequiredMixin, generic.UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["task_types"] = TaskType.objects.all()
+
         if self.request.user.is_superuser:
             context["assignees"] = Worker.objects.all()
         else:
@@ -180,10 +181,9 @@ class TaskUpdateView(LoginRequiredMixin, generic.UpdateView):
 
     def get_object(self):
         task = super().get_object()
-        if self.request.user not in task.assignees.all():
-            raise PermissionDenied
+        if self.request.user not in task.assignees.all() and not self.request.user.is_superuser:
+            raise PermissionDenied("You do not have permission to edit this task.")
         return task
-
 
 
 def sign_up_view(request):

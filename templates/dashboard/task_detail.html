@@ -51,9 +51,11 @@
             <button class="btn btn-warning" disabled>Edit Task</button>
           {% endif %}
           {% if not task.is_completed %}
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmComplete">
-              Mark as Completed
-            </button>
+            {% if not task.is_completed and request.user in task.assignees.all %}
+              <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#confirmComplete">
+                Mark as Completed
+              </button>
+            {% endif %}
           {% endif %}
         </div>
       </div>
