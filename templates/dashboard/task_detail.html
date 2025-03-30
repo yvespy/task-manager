@@ -3,8 +3,11 @@
 {% block content %}
   <div class="container mt-4">
     <div class="card shadow-sm">
-      <div class="card-header bg-primary text-white">
+      <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
         <h3 class="mb-0">{{ task.name }}</h3>
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDelete">
+          Delete Task
+        </button>
       </div>
       <div class="card-body">
         <p class="fw-bold">Description:</p>
@@ -53,7 +56,7 @@
     </div>
   </div>
 
-  <!-- Modal -->
+  <!-- Modal for complete -->
   <div class="modal fade" id="confirmComplete" tabindex="-1" aria-labelledby="confirmCompleteLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
@@ -70,6 +73,27 @@
             <button type="submit" class="btn btn-success">Yes</button>
           </form>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal for delete -->
+  <div class="modal fade" id="confirmDelete" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmDeleteLabel">Confirm Deletion</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to delete the task "<b>{{ task.name }}</b>"?
+        </div>
+        <div class="modal-footer">
+          <form method="post" action="{% url 'task-delete' task.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Yes, delete it</button>
+          </form>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, keep it</button>
         </div>
       </div>
     </div>

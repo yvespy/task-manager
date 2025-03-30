@@ -128,6 +128,17 @@ class TaskCompleteView(LoginRequiredMixin, View):
         return reverse_lazy("dashboard")
 
 
+class TaskDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Task
+    success_url = reverse_lazy("dashboard")
+    template_name = "dashboard/task_confirm_delete.html"
+    context_object_name = "task"
+
+    def get_object(self, queryset=None):
+        task = get_object_or_404(Task, pk=self.kwargs["pk"])
+        return task
+
+
 class TaskUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Task
     fields = ["name", "description", "deadline", "priority", "task_type"]
