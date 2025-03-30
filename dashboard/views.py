@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
+from django.db.models import Q
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
@@ -22,6 +23,7 @@ def index(request: HttpRequest) -> HttpResponse:
     }
 
     return render(request, "dashboard/index.html", context=context)
+
 
 class ActiveTaskView(LoginRequiredMixin, generic.ListView):
     model = Task
@@ -66,14 +68,14 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         task_paginator = Paginator(tasks_list, 5)
         completed_task_paginator = Paginator(completed_tasks, 5)
 
-        page_number = self.request.GET.get('page')
-        tasks_page = task_paginator.get_page(page_number)
-        completed_tasks_page = completed_task_paginator.get_page(page_number)
+        task_page_number = self.request.GET.get('task_page')
+        completed_page_number = self.request.GET.get('completed_page')
 
-        context["tasks_list"] = tasks_page
-        context["completed_tasks"] = completed_tasks_page
+        context["tasks_list"] = task_paginator.get_page(task_page_number)
+        context["completed_tasks"] = completed_task_paginator.get_page(completed_page_number)
 
         return context
+
 
 class WorkerListView(LoginRequiredMixin, generic.ListView):
     model = Worker
@@ -89,8 +91,18 @@ class WorkerDetailView(LoginRequiredMixin, generic.DetailView):
 
 class TaskListView(LoginRequiredMixin, generic.ListView):
     model = Task
-    context_object_name = "tasks_list"
-    paginate_by = 5
+    template_name = "dashboard/tasks_list.html"
+    context_object_name = "list_of_tasks"
+    paginate_by = 10
+
+    def get_queryset(self):
+        queryset = Task.objects.all().prefetch_related("assignees")
+        query = self.request.GET.get("q")
+        if query:
+            queryset = queryset.filter(
+                Q(name__icontains=query) | Q(description__icontains=query)
+            )
+        return queryset
 
 
 class TaskDetailView(LoginRequiredMixin, generic.DetailView):

@@ -1,8 +1,9 @@
 {% extends 'layouts/base.html' %}
 {% block content %}
 
-  <div class="py-4">
-    <a href="{% url 'task-add' %}" class="btn btn-primary" type="button">Add new task</a>
+  <div class="py-4 d-flex justify-content-between">
+    <a href="{% url 'task-add' %}" class="btn btn-primary">Add new task</a>
+    <a href="{% url 'task-list' %}" class="btn btn-primary">List of all tasks</a>
   </div>
 
   <div class="row">
@@ -29,7 +30,7 @@
                 </tbody>
               </table>
             </div>
-            {% include 'includes/pagination.html' with page_obj=tasks_list %}
+            {% include 'includes/pagination.html' with page_obj=tasks_list page_param='task_page' %}
           </div>
         </div>
 
@@ -64,10 +65,9 @@
             <div class="card-body">
               {% include 'includes/completed_task.html' %}
             </div>
-            {% include 'includes/pagination.html' with page_obj=completed_tasks %}
+            {% include 'includes/pagination.html' with page_obj=completed_tasks page_param='completed_page' %}
           </div>
         </div>
-
       </div>
     </div>
   </div>
