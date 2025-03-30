@@ -5,7 +5,8 @@
     <div class="card shadow-sm">
       <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
         <h3 class="mb-0">{{ task.name }}</h3>
-        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDelete">
+        <button type="submit"
+                class="btn btn-danger {% if request.user not in task.assignees.all and not request.user.is_superuser %}disabled{% endif %}">
           Delete Task
         </button>
       </div>

@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import HttpRequest, HttpResponse
@@ -148,6 +149,8 @@ class TaskDeleteView(LoginRequiredMixin, generic.DeleteView):
 
     def get_object(self, queryset=None):
         task = get_object_or_404(Task, pk=self.kwargs["pk"])
+        if self.request.user not in task.assignees.all() and not self.request.user.is_superuser:
+            raise PermissionDenied
         return task
 
 
@@ -174,6 +177,13 @@ class TaskUpdateView(LoginRequiredMixin, generic.UpdateView):
             self.object.assignees.set(assignees_ids)
 
         return response
+
+    def get_object(self):
+        task = super().get_object()
+        if self.request.user not in task.assignees.all():
+            raise PermissionDenied
+        return task
+
 
 
 def sign_up_view(request):
