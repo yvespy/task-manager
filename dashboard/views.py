@@ -182,7 +182,7 @@ class TaskUpdateView(LoginRequiredMixin, generic.UpdateView):
     def get_object(self):
         task = super().get_object()
         if self.request.user not in task.assignees.all() and not self.request.user.is_superuser:
-            raise PermissionDenied("You do not have permission to edit this task.")
+            raise PermissionDenied
         return task
 
 

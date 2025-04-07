@@ -48,7 +48,7 @@
 
         <div class="mt-4">
           <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Back to Tasks</a>
-          {% if not task.is_completed %}
+          {% if not task.is_completed and request.user in task.assignees.all or request.user.is_superuser %}
             <a href="{% url 'task-update' task.pk %}" class="btn btn-warning">Edit Task</a>
           {% else %}
             <button class="btn btn-warning" disabled>Edit Task</button>
