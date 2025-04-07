@@ -18,33 +18,25 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head> 
+<head>
   {% include 'includes/head.html' %}
   {% block extrastyle %}{% endblock extrastyle %}
   {% block extrahead %}{% endblock extrahead %}
 </head>
 
-  {% block nav %}
-    {% include 'includes/nav.html' %}
-  {% endblock nav %}
+<main class="content">
+  {% block header %}
+    {% include 'includes/navigation.html' %}
+  {% endblock header %}
 
-  <main class="content">
-    {% block header %}
-      {% include 'includes/navigation.html' %}
-    {% endblock header %}
+  {% block content %}{% endblock content %}
 
-    {% block content %}{% endblock content %}
+  {% block footer %}
+    {% include 'includes/footer.html' %}
+  {% endblock footer %}
 
-    {% block theme_settings %}
-      {% include 'includes/theme-settings.html' %}
-    {% endblock theme_settings %}
+</main>
 
-    {% block footer %}
-      {% include 'includes/footer.html' %}
-    {% endblock footer %}
-
-  </main>
-
-  {% include 'includes/scripts.html' %}
-  {% block extra_js %}{% endblock extra_js %}
+{% include 'includes/scripts.html' %}
+{% block extra_js %}{% endblock extra_js %}
 <body>
