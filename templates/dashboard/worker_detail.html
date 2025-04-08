@@ -7,26 +7,26 @@
 {% block content %}
 
 
-<h1>
-  Username: {{ worker_detail.username }}
-</h1>
+  <h1>
+    Username: {{ worker_detail.username }}
+  </h1>
 
-<p><strong>First name:</strong> {{ worker_detail.first_name }}</p>
-<p><strong>Last name:</strong> {{ worker_detail.last_name }}</p>
-<p><strong>Position:</strong> {{ worker_detail.position }}</p>
+  <p><strong>First name:</strong> {{ worker_detail.first_name }}</p>
+  <p><strong>Last name:</strong> {{ worker_detail.last_name }}</p>
+  <p><strong>Position:</strong> {{ worker_detail.position }}</p>
 
-<div class="ml-3">
-  <h4>Tasks</h4>
+  <div class="ml-3">
+    <h4>Tasks</h4>
 
-  {% for task in worker_detail.task_assigned.all %}
-    <hr>
-    <p><strong>Task name:</strong> {{ task.name }}</p>
-    <p><strong>Description:</strong> {{ task.description }}</p>
-    <p><strong>Priority:</strong> {{ task.priority }}</p>
-    <p><strong>Deadline:</strong> {{ task.deadline }}</p>
+    {% for task in worker_detail.task_assigned.all %}
+      <hr>
+      <p><strong>Task name:</strong> {{ task.name }}</p>
+      <p><strong>Description:</strong> {{ task.description }}</p>
+      <p><strong>Priority:</strong> {{ task.priority }}</p>
+      <p><strong>Deadline:</strong> {{ task.deadline }}</p>
 
-  {% empty %}
-    <p>No tasks!</p>
-  {% endfor %}
-</div>
+    {% empty %}
+      <p>No tasks!</p>
+    {% endfor %}
+  </div>
 {% endblock %}
