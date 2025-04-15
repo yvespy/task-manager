@@ -6,8 +6,11 @@ Django project for managing tasks for your project
 
 [Task manager project depoloyed to Render](https://task-manager-bkt2.onrender.com/)
 test user:
+
+```shell
 login: user
 password: user12345
+```
 
 ## Installation
 
