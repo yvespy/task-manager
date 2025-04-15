@@ -4,8 +4,10 @@ Django project for managing tasks for your project
 
 ## Check it out!
 
-[Task manager project depoloyed to Render]()
-
+[Task manager project depoloyed to Render](https://task-manager-bkt2.onrender.com/)
+test user:
+login: user
+password: user12345
 
 ## Installation
 
