@@ -21,7 +21,6 @@ class SignUpForm(forms.ModelForm):
     position = forms.ModelChoiceField(
         queryset=Position.objects.all(),
         required=True,
-        initial=Position.objects.first(),
         widget=forms.Select(attrs={'class': 'form-control'})
     )
     password = forms.CharField(
@@ -36,6 +35,13 @@ class SignUpForm(forms.ModelForm):
                   "email",
                   "position",
                   "password"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        try:
+            self.fields["position"].initial = Position.objects.first()
+        except Exception:
+            pass
 
     def save(self, commit=True) -> Worker:
         worker = super().save(commit=False)
