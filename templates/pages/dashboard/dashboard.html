@@ -1,0 +1,75 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+
+  <div class="py-4 d-flex justify-content-between">
+    <a href="{% url 'task-add' %}" class="btn btn-primary">Add new task</a>
+    <a href="{% url 'task-list' %}" class="btn btn-primary">List of all tasks</a>
+  </div>
+
+  <div class="row">
+    <div class="col-12 col-xl-8">
+      <div class="row">
+        <div class="col-12 mb-4">
+          <div class="card border-0 shadow">
+            <div class="card-header">
+              <h2 class="fs-5 fw-bold mb-0">Your Tasks</h2>
+            </div>
+            <div class="table-responsive">
+              <table class="table align-items-center table-flush">
+                <thead class="thead-light">
+                <tr>
+                  <th scope="col">Task name</th>
+                  <th scope="col">Description</th>
+                  <th scope="col">Priority</th>
+                  <th scope="col">Task Type</th>
+                  <th scope="col">Task status</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% include 'includes/active_task.html' %}
+                </tbody>
+              </table>
+            </div>
+            {% include 'includes/pagination.html' with page_obj=tasks_list page_param='task_page' %}
+          </div>
+        </div>
+
+        <div class="col-12 col-xxl-6 mb-4">
+          <div class="card border-0 shadow">
+            <div class="card-header border-bottom d-flex align-items-center justify-content-between">
+              <h2 class="fs-5 fw-bold mb-0">Other members</h2>
+              <a href="{% url 'worker-list' %}" class="btn btn-sm btn-primary">See all</a>
+            </div>
+            <div class="card-body">
+              <ul class="list-group list-group-flush list my--3">
+                {% for worker in workers %}
+                  <li class="list-group-item px-0">
+                    <h4 class="h6 mb-0">
+                      <a href="#">{{ worker.first_name }} {{ worker.last_name }}</a>
+                    </h4>
+                    <div class="d-flex align-items-center">
+                      <small>{{ worker.position }}</small>
+                    </div>
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-xxl-6 mb-4">
+          <div class="card border-0 shadow">
+            <div class="card-header">
+              <h2 class="fs-5 fw-bold mb-0">Completed Tasks</h2>
+            </div>
+            <div class="card-body">
+              {% include 'includes/completed_task.html' %}
+            </div>
+            {% include 'includes/pagination.html' with page_obj=completed_tasks page_param='completed_page' %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}

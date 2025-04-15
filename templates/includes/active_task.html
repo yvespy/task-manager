@@ -1,0 +1,55 @@
+{% for task in tasks_list %}
+  <tr>
+    <th class="text-gray-900" scope="row">
+      <a href="{% url 'task' task.pk %}" class="text-decoration-none">
+        {{ task.name }}
+      </a>
+    </th>
+    <td class="fw-bolder text-gray-500">{{ task.description }}</td>
+    <td class="fw-bolder text-gray-500">
+      {% if task.priority == 'Urgent' %}
+        <span class="badge bg-danger">Urgent</span>
+      {% elif task.priority == 'High' %}
+        <span class="badge bg-info">High</span>
+      {% elif task.priority == 'Medium' %}
+        <span class="badge bg-warning text-dark">Medium</span>
+      {% elif task.priority == 'Low' %}
+        <span class="badge bg-success">Low</span>
+      {% else %}
+        {{ task.priority }}
+      {% endif %}
+    </td>
+    <td class="fw-bolder text-gray-500">{{ task.task_type }}</td>
+    <td class="fw-bolder text-gray-500">
+      <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal"
+              data-bs-target="#confirmComplete{{ task.id }}">
+        Finish task
+      </button>
+    </td>
+  </tr>
+  <div class="modal fade" id="confirmComplete{{ task.id }}" tabindex="-1"
+       aria-labelledby="confirmCompleteLabel{{ task.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmCompleteLabel{{ task.id }}">Confirm Completion</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to mark "<b>{{ task.name }}</b>" as completed?
+        </div>
+        <div class="modal-footer">
+          <form method="post" action="{% url 'task-complete' task.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success">Yes</button>
+          </form>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% empty %}
+  <tr>
+    <td colspan="5" class="text-center text-gray-500">No active tasks</td>
+  </tr>
+{% endfor %}

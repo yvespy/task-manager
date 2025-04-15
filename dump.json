@@ -1,0 +1,232 @@
+[
+{
+    "model": "dashboard.position",
+    "pk": 1,
+    "fields": {
+        "name": "Developer"
+    }
+},
+{
+    "model": "dashboard.position",
+    "pk": 2,
+    "fields": {
+        "name": "Project Manager"
+    }
+},
+{
+    "model": "dashboard.position",
+    "pk": 3,
+    "fields": {
+        "name": "QA"
+    }
+},
+{
+    "model": "dashboard.position",
+    "pk": 4,
+    "fields": {
+        "name": "Designer"
+    }
+},
+{
+    "model": "dashboard.position",
+    "pk": 5,
+    "fields": {
+        "name": "DevOps"
+    }
+},
+{
+    "model": "dashboard.worker",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$WIoCh03F3RDE2JgVxMfsYR$LISDur1I32yd2XiOXHeZJpVH+s22UZ1kupVqCtCZSkY=",
+        "last_login": "2025-04-14T13:34:30.637Z",
+        "is_superuser": true,
+        "username": "admin_manager",
+        "first_name": "",
+        "last_name": "",
+        "email": "admin_manager@mail.com",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-03-17T17:01:20.961Z",
+        "position": null,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "dashboard.worker",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$arGSCNcvMzoJm3HimRPbLi$miLilWwn5uM9zfjsXYnxQlhW9mQLKvgLWPYn2Z2LySQ=",
+        "last_login": "2025-04-15T14:37:46.289Z",
+        "is_superuser": false,
+        "username": "john_doe",
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": "john_doe@mail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-03-17T17:50:10Z",
+        "position": 1,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "dashboard.worker",
+    "pk": 4,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$TaBqOJsqmGFM6bqQs58XsE$ZVwtxB7e0H8v+NFHmOF6ERAuQN1Bw0fBHr8vzr/Kgd4=",
+        "last_login": "2025-03-24T23:10:14Z",
+        "is_superuser": false,
+        "username": "jane_doe",
+        "first_name": "Jane",
+        "last_name": "Doe",
+        "email": "jane_doe@mail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-03-24T23:10:03Z",
+        "position": 4,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "dashboard.worker",
+    "pk": 5,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$41eEC2pmOKlOTHWLpsHSrI$8qQiWfvw/QOzCN2pyzKcBGoi5ROT+j4tjbbo5Hr/iLw=",
+        "last_login": "2025-03-25T00:21:38.112Z",
+        "is_superuser": false,
+        "username": "alex_mason",
+        "first_name": "Alex",
+        "last_name": "Mason",
+        "email": "alex.mason@mail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-03-25T00:21:30.772Z",
+        "position": 5,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "dashboard.worker",
+    "pk": 6,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$XhTv9qgJVZ8kOt9OPnvRlF$vUvuSw0BbiXuH14VrO+EUqCc13PCu0yo8aEMt/4LOzY=",
+        "last_login": "2025-03-30T12:48:28.127Z",
+        "is_superuser": false,
+        "username": "frank_woods",
+        "first_name": "Frank",
+        "last_name": "Woods",
+        "email": "frank.woods@mail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-03-25T14:33:42.671Z",
+        "position": 2,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "dashboard.worker",
+    "pk": 7,
+    "fields": {
+        "password": "pbkdf2_sha256$720000$EbsYpGZEpf2P1SdJXOclMO$BquDMkCKwE1znRwsAnXC0F0UnRNPOxW0K9Qc0eBhELg=",
+        "last_login": "2025-04-07T13:52:14.334Z",
+        "is_superuser": false,
+        "username": "russell_adler",
+        "first_name": "Russell",
+        "last_name": "Adler",
+        "email": "russell_adler@mail.com",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2025-03-30T22:29:32.088Z",
+        "position": 5,
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "dashboard.tasktype",
+    "pk": 1,
+    "fields": {
+        "name": "Bug"
+    }
+},
+{
+    "model": "dashboard.tasktype",
+    "pk": 2,
+    "fields": {
+        "name": "New feature"
+    }
+},
+{
+    "model": "dashboard.tasktype",
+    "pk": 3,
+    "fields": {
+        "name": "Breaking change"
+    }
+},
+{
+    "model": "dashboard.tasktype",
+    "pk": 4,
+    "fields": {
+        "name": "Refactoring"
+    }
+},
+{
+    "model": "dashboard.tasktype",
+    "pk": 5,
+    "fields": {
+        "name": "QA"
+    }
+},
+{
+    "model": "dashboard.task",
+    "pk": 59,
+    "fields": {
+        "name": "Add new feature",
+        "description": "Add login page",
+        "deadline": "2025-04-20T17:37:00Z",
+        "is_completed": false,
+        "priority": "Low",
+        "task_type": 2,
+        "assignees": [
+            1
+        ]
+    }
+},
+{
+    "model": "dashboard.task",
+    "pk": 60,
+    "fields": {
+        "name": "Fix bug",
+        "description": "Fix bug with registration",
+        "deadline": "2025-04-27T16:36:00Z",
+        "is_completed": false,
+        "priority": "High",
+        "task_type": 1,
+        "assignees": [
+            2,
+            4
+        ]
+    }
+},
+{
+    "model": "dashboard.task",
+    "pk": 61,
+    "fields": {
+        "name": "Change name of project",
+        "description": "Just change the name",
+        "deadline": "2025-04-15T16:37:00Z",
+        "is_completed": true,
+        "priority": "Urgent",
+        "task_type": 3,
+        "assignees": [
+            1
+        ]
+    }
+}
+]

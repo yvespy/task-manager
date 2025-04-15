@@ -1,0 +1,76 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+
+{% block content %}
+  <div class="container d-flex justify-content-center align-items-center">
+    <div class="card shadow-lg p-4" style="width: 40rem;">
+      <h2 class="text-center mb-4">Edit Task</h2>
+      <form method="post">
+        {% csrf_token %}
+
+        <div class="mb-3">
+          <label for="{{ form.name.id_for_label }}" class="form-label">Task Name</label>
+          <input type="text" name="{{ form.name.name }}" id="{{ form.name.id_for_label }}"
+                 value="{{ form.name.value|default_if_none:'' }}" class="form-control">
+        </div>
+
+        <div class="mb-3">
+          <label for="description" class="form-label">Description</label>
+          <textarea name="description" id="description" class="form-control"
+                    rows="3">{{ form.description.value|default_if_none:'' }}</textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="deadline" class="form-label">Deadline</label>
+          <input type="datetime-local" name="deadline" id="deadline"
+                 value="{{ form.deadline.value|date:'Y-m-d\TH:i' }}"
+                 class="form-control">
+        </div>
+
+        <div class="mb-3">
+          <label for="priority" class="form-label">Priority</label>
+          <select name="priority" id="priority" class="form-select">
+            {% for key, value in form.fields.priority.choices %}
+              <option value="{{ key }}" {% if form.priority.value == key %}selected{% endif %}>
+                {{ value }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="task_type" class="form-label">Task Type</label>
+          <select name="task_type" id="task_type" class="form-select">
+            {% for task_type in task_types %}
+              <option value="{{ task_type.id }}" {% if form.task_type.value == task_type.id %}selected{% endif %}>
+                {{ task_type.name }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="assignees" class="form-label">Assignees</label>
+          <div class="form-check">
+            {% for worker in assignees %}
+              <div class="form-check">
+                <input class="form-check-input rounded-circle" type="checkbox" name="assignees" value="{{ worker.id }}"
+                       id="assignee-{{ worker.id }}"
+                       {% if worker in form.instance.assignees.all %}checked{% endif %}>
+                <label class="form-check-label" for="assignee-{{ worker.id }}">
+                  {{ worker.username }}
+                </label>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+
+
+        <div class="d-flex justify-content-center gap-3">
+          <button type="submit" class="btn btn-success">Save Changes</button>
+          <a href="{% url 'task' task.pk %}" class="btn btn-secondary">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
